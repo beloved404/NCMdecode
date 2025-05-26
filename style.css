@@ -423,8 +423,7 @@ body {
   height: 100%;
 }
 
-.floating-notes::before,
-.floating-notes::after {
+.floating-notes::before {
   content: '♪ ♫ ♪ ♫ ♪ ♫ ♪ ♫ ♪ ♫';
   position: absolute;
   font-size: 20px;
@@ -433,21 +432,9 @@ body {
   white-space: nowrap;
   letter-spacing: 80px;
   text-shadow: 0 0 12px rgba(220, 20, 60, 0.6);
-}
-
-.floating-notes::before {
-  top: 20%;
+  top: 40%;
   left: -100%;
   animation-delay: 0s;
-}
-
-.floating-notes::after {
-  top: 60%;
-  left: -100%;
-  animation-delay: -12s;
-  font-size: 16px;
-  color: rgba(178, 34, 34, 0.7);
-  text-shadow: 0 0 10px rgba(178, 34, 34, 0.5);
 }
 
 @keyframes floatNotes {
@@ -484,50 +471,7 @@ body {
   50% { transform: translateY(-100px) rotate(180deg); opacity: 1; }
 }
 
-/* 音频可视化器 */
-.audio-visualizer {
-  margin-bottom: 1rem;
-  padding: 1rem;
-  background: rgba(230, 0, 38, 0.05);
-  border-radius: var(--border-radius);
-  border: 1px solid rgba(230, 0, 38, 0.1);
-}
 
-.visualizer-bars {
-  display: flex;
-  justify-content: center;
-  align-items: end;
-  gap: 3px;
-  height: 60px;
-}
-
-.visualizer-bars span {
-  width: 4px;
-  background: var(--primary-gradient);
-  border-radius: 2px;
-  animation: audioWave 1.5s ease-in-out infinite alternate;
-}
-
-.visualizer-bars span:nth-child(1) { animation-delay: 0s; }
-.visualizer-bars span:nth-child(2) { animation-delay: 0.1s; }
-.visualizer-bars span:nth-child(3) { animation-delay: 0.2s; }
-.visualizer-bars span:nth-child(4) { animation-delay: 0.3s; }
-.visualizer-bars span:nth-child(5) { animation-delay: 0.4s; }
-.visualizer-bars span:nth-child(6) { animation-delay: 0.5s; }
-.visualizer-bars span:nth-child(7) { animation-delay: 0.6s; }
-.visualizer-bars span:nth-child(8) { animation-delay: 0.7s; }
-.visualizer-bars span:nth-child(9) { animation-delay: 0.8s; }
-.visualizer-bars span:nth-child(10) { animation-delay: 0.9s; }
-.visualizer-bars span:nth-child(11) { animation-delay: 1s; }
-.visualizer-bars span:nth-child(12) { animation-delay: 1.1s; }
-.visualizer-bars span:nth-child(13) { animation-delay: 1.2s; }
-.visualizer-bars span:nth-child(14) { animation-delay: 1.3s; }
-.visualizer-bars span:nth-child(15) { animation-delay: 1.4s; }
-
-@keyframes audioWave {
-  0% { height: 5px; opacity: 0.3; }
-  100% { height: 50px; opacity: 1; }
-}
 
 /* 进度条音符动画 */
 .progress-notes {
@@ -631,15 +575,7 @@ body {
   }
 }
 
-/* 音频可视化器播放状态 */
-.audio-visualizer.playing {
-  border-color: var(--primary-color);
-  background: rgba(230, 0, 38, 0.1);
-}
 
-.audio-visualizer.playing .visualizer-bars span {
-  animation-duration: 0.8s;
-}
 
 /* 音符装饰增强 */
 .upload-area.dragover::before {
