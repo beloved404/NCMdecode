@@ -90,6 +90,9 @@ async function handleFile(file) {
     updateProgressStatus("正在读取文件...");
     const arrayBuffer = await file.arrayBuffer();
     
+    // 保存原文件名（去掉.ncm扩展名）
+    const originalFileName = file.name.replace(/\.ncm$/i, '');
+    
     updateProgressStatus("正在解密文件...");
     const {audioBlob: rawBlob, meta, coverBlob} = await decodeNcm(arrayBuffer, updateProgress);
 
@@ -127,7 +130,7 @@ async function handleFile(file) {
     }
 
     // 显示结果
-    showResult(meta, finalExt, finalBlob, coverBlob);
+    showResult(meta, finalExt, finalBlob, coverBlob, originalFileName);
     
   } catch (err) {
     console.error(err);
@@ -172,7 +175,7 @@ function updateProgressStatus(status) {
   progressStatus.textContent = status;
 }
 
-function showResult(meta, format, audioBlob, coverBlob) {
+function showResult(meta, format, audioBlob, coverBlob, originalFileName = 'music') {
   // 设置封面
   const albumCover = coverImg.parentElement;
   if (coverBlob) {
@@ -188,14 +191,11 @@ function showResult(meta, format, audioBlob, coverBlob) {
   const audioUrl = URL.createObjectURL(audioBlob);
   audioPlayer.src = audioUrl;
   downloadBtn.href = audioUrl;
-  downloadBtn.download = `music.${format}`;
+  downloadBtn.download = `${originalFileName}.${format}`;
 
   // 显示结果区域
   hideProgress();
   resultSection.classList.add("show");
-  
-  // 启动音频可视化
-  setupAudioVisualizer();
 }
 
 // 音乐交互效果
@@ -253,34 +253,7 @@ function createFloatingNote(x, y) {
   }, 2000);
 }
 
-// 音频可视化设置
-function setupAudioVisualizer() {
-  const audioPlayer = document.getElementById('audioPlayer');
-  const visualizer = document.getElementById('audioVisualizer');
-  const bars = visualizer.querySelectorAll('.visualizer-bars span');
-  
-  // 监听音频播放状态
-  audioPlayer.addEventListener('play', () => {
-    visualizer.classList.add('playing');
-    bars.forEach(bar => {
-      bar.style.animationPlayState = 'running';
-    });
-  });
-  
-  audioPlayer.addEventListener('pause', () => {
-    visualizer.classList.remove('playing');
-    bars.forEach(bar => {
-      bar.style.animationPlayState = 'paused';
-    });
-  });
-  
-  audioPlayer.addEventListener('ended', () => {
-    visualizer.classList.remove('playing');
-    bars.forEach(bar => {
-      bar.style.animationPlayState = 'paused';
-    });
-  });
-}
+
 
 // ---------------- 核心解码 ----------------
 async function decodeNcm(buffer, progressCb = () => {}) {
