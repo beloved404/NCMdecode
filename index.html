@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NCM 音乐解码器 - 网易云音乐文件转换工具</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- CryptoJS 用于 AES-ECB 解密 -->
+  <script src="https://cdn.jsdelivr.net/npm/crypto-js@4.1.1/crypto-js.min.js"></script>
+  <!-- FFMPEG.wasm 进行音频转码 -->
+  <script src="https://unpkg.com/@ffmpeg/ffmpeg@0.10.1/dist/ffmpeg.min.js"></script>
+</head>
+<body>
+  <div class="app-container">
+    <!-- 音乐装饰元素 -->
+    <div class="music-decorations">
+      <div class="floating-notes"></div>
+      <div class="music-particles"></div>
+      <div class="sound-waves"></div>
+    </div>
+    
+    <!-- Header Section -->
+    <header class="header">
+      <div class="header-content">
+        <div class="logo">
+          <i class="fas fa-music"></i>
+          <h1>NCM 音乐解码器</h1>
+        </div>
+        <p class="subtitle">专业的网易云音乐 NCM 文件转换工具</p>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <div class="container">
+        
+        <!-- Upload Section -->
+        <section class="upload-section">
+          <div class="upload-card">
+            <div class="upload-area" id="uploadArea">
+              <div class="upload-icon">
+                <i class="fas fa-cloud-upload-alt"></i>
+              </div>
+              <h3>拖拽文件到此处或点击选择</h3>
+              <p>支持 .ncm 格式文件，最大支持 500MB</p>
+              <input type="file" id="fileInput" accept=".ncm" hidden />
+              <button class="upload-btn" id="uploadBtn">
+                <i class="fas fa-folder-open"></i>
+                选择 NCM 文件
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- Info Section -->
+        <section class="info-section">
+          <div class="info-card">
+            <div class="info-content">
+              <i class="fas fa-music"></i>
+              <p>自动转换为高品质 MP3 格式</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Progress Section -->
+        <section class="progress-section" id="progressSection">
+          <div class="progress-card">
+            <div class="progress-header">
+              <h3><i class="fas fa-cogs"></i> 处理中...</h3>
+              <span class="progress-text" id="progressText">0%</span>
+            </div>
+            <div class="progress-bar-container">
+              <div class="progress-bar" id="progressBar">
+                <div class="progress-fill"></div>
+                <div class="progress-notes">
+                  <i class="fas fa-music"></i>
+                  <i class="fas fa-music"></i>
+                  <i class="fas fa-music"></i>
+                </div>
+              </div>
+            </div>
+            <p class="progress-status" id="progressStatus">正在解析文件...</p>
+          </div>
+        </section>
+
+        <!-- Result Section -->
+        <section class="result-section" id="resultSection">
+          <div class="result-card">
+            <div class="result-content">
+              <!-- Album Cover -->
+              <div class="album-cover">
+                <img id="coverImg" alt="专辑封面" />
+                <div class="cover-placeholder">
+                  <i class="fas fa-music"></i>
+                </div>
+              </div>
+              
+              <!-- Audio Player -->
+              <div class="audio-player-container">
+                <audio id="audioPlayer" controls preload="metadata">
+                  您的浏览器不支持音频播放。
+                </audio>
+              </div>
+
+              <!-- Action Buttons -->
+              <div class="action-buttons">
+                <a id="downloadBtn" href="#" download class="btn btn-primary">
+                  <i class="fas fa-download"></i>
+                  下载 MP3 文件
+                </a>
+                <button id="newFileBtn" class="btn btn-secondary">
+                  <i class="fas fa-plus"></i>
+                  转换新文件
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <p>© 2025 NCM 音乐解码器 | 完全本地处理，保护您的隐私</p>
+    </footer>
+  </div>
+
+  <script src="main.js"></script>
+  
+  <!-- Live2D看板娘 -->
+  <script src="https://cdn.jsdelivr.net/npm/live2d-widget@3.1.4/lib/L2Dwidget.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // 延迟初始化，确保页面完全加载
+      setTimeout(function() {
+        try {
+          L2Dwidget.init({
+            model: {
+              jsonPath: "https://unpkg.com/live2d-widget-model-koharu@1.0.5/assets/koharu.model.json"
+            },
+            display: {
+              position: "left",
+              width: 120,
+              height: 240,
+              hOffset: 10,
+              vOffset: -20
+            },
+            mobile: {
+              show: true,
+              scale: 0.6
+            },
+            react: {
+              opacityDefault: 0.7,
+              opacityOnHover: 0.3
+            }
+          });
+          console.log('Live2D 小人加载成功!');
+        } catch (e) {
+          console.error('Live2D 小人加载失败:', e);
+          // 如果失败，创建一个简单的提示
+          const notice = document.createElement('div');
+          notice.style.cssText = `
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(230, 0, 38, 0.1);
+            color: #e60026;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            z-index: 1000;
+            border: 1px solid rgba(230, 0, 38, 0.3);
+          `;
+          notice.textContent = '🎵 Live2D加载中...';
+          document.body.appendChild(notice);
+          
+          // 3秒后移除提示
+          setTimeout(() => {
+            if (notice.parentNode) {
+              notice.parentNode.removeChild(notice);
+            }
+          }, 3000);
+        }
+      }, 1000);
+    });
+  </script>
+</body>
+</html> 
