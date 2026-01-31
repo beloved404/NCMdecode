@@ -29,28 +29,6 @@
 - **移动适配**：在移动设备上自动缩放以保持最佳显示效果
 - **优雅降级**：如果加载失败会显示友好的提示信息
 
-## 🚀 快速开始
-
-### 在线体验
-1. Fork 本仓库到你的 GitHub 账户
-2. 进入 **Settings → Pages**
-3. 将 **Source** 设为 `main` 分支下的 `docs` 目录
-4. 几分钟后即可通过 `https://<your-username>.github.io/<repo-name>/` 访问
-
-### 本地运行
-```bash
-# 克隆仓库
-git clone https://github.com/your-username/ncm-decoder.git
-
-# 进入项目目录
-cd ncm-decoder
-
-# 启动本地服务器（可选）
-python -m http.server 8080
-
-# 或直接用浏览器打开
-open docs/index.html
-```
 
 ## 🛠️ 技术架构
 
@@ -125,3 +103,4 @@ docs/
 *如果这个项目对你有帮助，别忘了给个 ⭐ Star！*
 
 </div> 
+
